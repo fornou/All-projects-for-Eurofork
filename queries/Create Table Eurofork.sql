@@ -80,4 +80,3 @@ CREATE TABLE IF NOT EXISTS `MicroMissioni` (
   KEY `MicroMissioni_ibfk_1` (`ID_Commessa`),
   CONSTRAINT `MicroMissioni_ibfk_1` FOREIGN KEY (`ID_Commessa`) REFERENCES `Commesse` (`ID_Commessa`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=697453 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-

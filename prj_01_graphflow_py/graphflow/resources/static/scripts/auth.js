@@ -14,7 +14,8 @@ export async function callAPIwithToken(method, url, body) {
     const token = getToken(); // Will throw and redirect if missing
 
     const headers = {
-      'Authorization': `Bearer ${token}`
+      'Authorization': `Bearer ${token}`,
+      "X-Requested-With": "XMLHttpRequest"
     };
 
     if (!(body instanceof FormData)) {

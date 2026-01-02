@@ -226,7 +226,7 @@ export function createCommessaCards(commesse) {
       col.classList.add('col-md-3', 'position-relative');
 
       const card = document.createElement('div');
-      card.classList.add('card');
+      card.classList.add('card', 'bg-dark');
 
       const { dotsMenu, popupMenu } = createDotsMenu(commessa, closeOtherPopups);
 
@@ -245,11 +245,11 @@ export function createCommessaCards(commesse) {
       cardBody.className = "card-body";
 
       const h5 = document.createElement('h5');
-      h5.classList.add('card-title');
+      h5.classList.add('card-title', 'text-white');
       h5.textContent = `Commessa ${commessa.ID_Commessa}`;
 
       const p = document.createElement('p');
-      p.classList.add('card-text');
+      p.classList.add('card-text', 'text-white');
       p.textContent = commessa.Nome;
 
       cardBody.appendChild(h5);
@@ -338,11 +338,11 @@ export async function getCommessaById() {
     avatar.style.objectFit = "cover";
 
     const title = document.createElement("h5");
-    title.className = "text-center";
+    title.className = "text-center text-white";
     title.textContent = `Commessa ${commessa.ID_Commessa}`;
 
     const nome = document.createElement("p");
-    nome.className = "text-center text-muted";
+    nome.className = "text-center text-white";
     nome.textContent = commessa.Nome;
 
     const researchContainer = document.createElement("div");

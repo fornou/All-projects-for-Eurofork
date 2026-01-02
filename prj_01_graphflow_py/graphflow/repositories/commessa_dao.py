@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from model.commessa import Commessa
+from models.commessa import Commessa
 from sqlalchemy import func
 
 class CommessaDAO:

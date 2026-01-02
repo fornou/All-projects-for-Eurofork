@@ -2,7 +2,7 @@ from typing import Optional
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from model.utente import Utente
+from models.utente import Utente
 
 class UtenteDAO:
     def __init__(self, db : Session):

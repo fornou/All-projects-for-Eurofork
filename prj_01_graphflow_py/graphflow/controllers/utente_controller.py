@@ -1,7 +1,7 @@
 from fastapi import  Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
 from database.database import get_db
-from model.utente import StatoAdmin, Utente
+from models.utente import StatoAdmin, Utente
 from services.auth_service import get_current_user
 from services.token_service import TokenService
 from services.utente_service import UtenteService

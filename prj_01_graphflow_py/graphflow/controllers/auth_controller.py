@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from model.utente import Utente
+from models.utente import Utente
 from services.token_service import TokenService
 from services.auth_service import AuthService, get_current_user
 from database.database import get_db

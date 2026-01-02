@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from repository.allarmi_dao import AllarmiDAO
+from repositories.allarmi_dao import AllarmiDAO
 from util.csv_utils import mappa_e_prepara_records
 
 MAPPING_COLONNE_ALLARMI = {

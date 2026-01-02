@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from repository.micromissioni_dao import MicroMissioniDAO
+from repositories.micromissioni_dao import MicroMissioniDAO
 from util.csv_utils import mappa_e_prepara_records
 
 MAPPING_COLONNE_MICROMISSIONI = {

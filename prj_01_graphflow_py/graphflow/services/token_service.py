@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
-from model.utente import Utente
+from models.utente import Utente
 from services import jwt_service
 from fastapi import HTTPException
-from repository.token_dao import TokenDAO
+from repositories.token_dao import TokenDAO
 from sqlalchemy.orm import Session
 
 from dotenv import load_dotenv

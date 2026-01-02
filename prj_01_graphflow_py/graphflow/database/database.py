@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from .settings import settings
 import importlib
 import pkgutil
-from model import __path__ as model_path
+from models import __path__ as model_path
 
 # crea una connessione al database
 engine = create_engine(settings.db_url, pool_pre_ping=True)
@@ -59,7 +59,7 @@ def init_db():
     # Importa dinamicamente tutti i moduli che definiscono modelli
     for _, module_name, _ in pkgutil.iter_modules(model_path):
         if not module_name.startswith("_"):  # evita __init__.py o moduli privati
-            importlib.import_module(f"model.{module_name}")
+            importlib.import_module(f"models.{module_name}")
 
     # Crea tutte le tabelle
     Base.metadata.create_all(bind=engine)

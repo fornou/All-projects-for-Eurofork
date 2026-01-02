@@ -3,7 +3,8 @@ from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.concurrency import run_in_threadpool
 from sqlalchemy.orm import Session
 from database.database import get_db
-from services.auth_service import get_current_user
+from services.auth_service import get_current_user, admin_required
+from dependencies.only_ajax import only_ajax
 from services.commessa_service import CommessaService
 from services.micromissioni_service import MicroMissioniService
 from services.allarmi_service import AllarmiService
@@ -14,7 +15,6 @@ import jwt
 import time
 import logging
 from dotenv import load_dotenv
-from database.database import SessionLocal
 load_dotenv()
 
 # ------------------ CONFIG ------------------
@@ -38,7 +38,7 @@ def genera_metabase_iframe(element_id: int, commessa: str):
             "exp": round(time.time()) + (60 * 60 * 24)
         }
         token = jwt.encode(payload, METABASE_SECRET_KEY, algorithm="HS256")
-        url = f"{METABASE_SITE_URL}/embed/dashboard/{token}#bordered=true&titled=true"
+        url = f"{METABASE_SITE_URL}/embed/dashboard/{token}#theme=night&background=false&bordered=true&titled=true"
         return url
 
     except Exception as e:
@@ -51,7 +51,12 @@ class CommessaController:
         self.router = APIRouter(
             prefix="/api/commessa",
             tags=["Commesse"],
-            dependencies=[Depends(get_current_user)]
+            dependencies=[Depends(get_current_user), Depends(only_ajax)]
+        )
+        self.admin_router = APIRouter(
+            prefix="/api/admin/commessa",
+            tags=["Commesse Web"],
+            dependencies=[Depends(admin_required)]
         )
         self._add_routes()
 
@@ -62,6 +67,13 @@ class CommessaController:
         self.router.get("/search/{title}")(self.get_commessa_by_filter)
         self.router.post("/create")(self.create_commessa)
         self.router.post("/{commessa}/{categoria}/upload")(self.upload_file)
+
+        self.admin_router.get("/all")(self.get_all_commesse)
+        self.admin_router.get("/{commessa}/grafico")(self.get_grafico_commessa)
+        self.admin_router.get("/{commessa}")(self.get_commessa_by_nome)
+        self.admin_router.get("/search/{title}")(self.get_commessa_by_filter)
+        self.admin_router.post("/create")(self.create_commessa)
+        self.admin_router.post("/{commessa}/{categoria}/upload")(self.upload_file)
 
     # ------------------ GET COMMESSE ------------------
     def get_all_commesse(self, db: Session = Depends(get_db)):
@@ -97,12 +109,12 @@ class CommessaController:
 
     # ------------------ CREATE COMMESSA ------------------
     def create_commessa(
-        self,
-        commessa: str = Form(...),
-        descrizione: str = Form(None),
-        foto: UploadFile = File(None),
-        db: Session = Depends(get_db)
-    ):
+            self,
+            commessa: str = Form(...),
+            descrizione: str = Form(None),
+            foto: UploadFile = File(None),
+            db: Session = Depends(get_db)
+        ):
         try:
             commessa_service = CommessaService(db)
             nuova = commessa_service.add_commessa(commessa)
@@ -131,8 +143,12 @@ class CommessaController:
             raise HTTPException(status_code=500, detail=str(e))
 
     # ------------------ UPLOAD FILE ------------------
-    async def upload_file(self, commessa: str, categoria: str, file: UploadFile = File(...)):
-        db = SessionLocal()
+    async def upload_file(
+            self, commessa: str,
+            categoria: str,
+            file: UploadFile = File(...),
+            db: Session = Depends(get_db)
+        ):
         try:
             temp_file_path = os.path.join(UPLOAD_FOLDER, file.filename)
             await run_in_threadpool(shutil.copyfileobj, file.file, open(temp_file_path, "wb"))

@@ -1,4 +1,4 @@
-from repository.utente_dao import UtenteDAO
+from repositories.utente_dao import UtenteDAO
 from sqlalchemy.orm import Session
 
 class UtenteService:

@@ -1,4 +1,4 @@
-from repository.commessa_dao import CommessaDAO
+from repositories.commessa_dao import CommessaDAO
 from sqlalchemy.orm import Session
 
 class CommessaService:

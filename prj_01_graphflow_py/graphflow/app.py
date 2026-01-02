@@ -1,18 +1,18 @@
 from fastapi import FastAPI
-from controller.commessa_controller import CommessaController
-from controller.utente_controller import UtenteController
-from controller.mvc import MVCController
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from database.database import init_db
 from database.settings import settings
-from controller.auth_controller import AuthController
 from fastapi import Request
 from fastapi.responses import HTMLResponse
 from fastapi.exceptions import RequestValidationError
-from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from controllers.commessa_controller import CommessaController
+from controllers.utente_controller import UtenteController
+from controllers.mvc import MVCController
+from controllers.auth_controller import AuthController
 
 def create_app():
     app = FastAPI()
@@ -23,6 +23,7 @@ def create_app():
     auth_controller = AuthController()
 
     app.include_router(commessa_controller.router)
+    app.include_router(commessa_controller.admin_router)
     app.include_router(utente_controller.router)
     app.include_router(auth_controller.router)
     app.include_router(mvc_controller.router)

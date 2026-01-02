@@ -1,3 +1,4 @@
+-- Tabella di test per simulare calcolo reliability  sui pacchetti di micromissioni
 CREATE TABLE `test` (
 	`ID` INT NOT NULL AUTO_INCREMENT,
 	`Result` VARCHAR(5) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
@@ -5,6 +6,8 @@ CREATE TABLE `test` (
 	PRIMARY KEY (`ID`) USING BTREE
 );
 
+-- Inserimento dati di test nella tabella: crea 100 pacchetti e assegna N risultati micromissione per essi 
+-- con il 2% di KO 
 INSERT INTO test (Result, N_Package)
 SELECT 
     IF(RAND() < 0.02, 'KO', 'OK') AS Result,  -- 2% KO
@@ -17,11 +20,11 @@ FROM (
     LIMIT 100
 ) AS pkg
 JOIN (
-    SELECT 1 FROM (SELECT 0 UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4) t  -- da 2 a 5 missioni
+    SELECT 1 FROM (SELECT 0 UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4) t  -- da 2 a 5 micromissioni
 ) AS missions
 WHERE RAND() < 0.8;  
 
-
+-- Tabella di test 2 per simulare calcolo pacchetti date come info index e count mission che sono poi le info che si trovato sui csv
 CREATE TABLE test2 (
    ID INT NOT NULL AUTO_INCREMENT,
 	Result VARCHAR(5) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
@@ -30,6 +33,7 @@ CREATE TABLE test2 (
 	PRIMARY KEY (`ID`) USING BTREE
 );
 
+-- Inserimento dati di test nella tabella test2
 INSERT INTO test2 (Result, IndexMission, CountMission) VALUES
 ('OK', 1, 1),
 ('OK', 1, 1),
@@ -124,3 +128,58 @@ FROM(-- Query 5 che mi dice il totale di pacchetti per ogni risultato
 	GROUP BY 	
 		status_package.StatusPackage
 	)AS amount_package_status;
+
+	
+SELECT 
+	ID_Micromissione AS ID,
+	Data_Ora_Tx,
+	livellomacchine.Macchina,
+	micromissioni.Macchina,
+	Risultato AS Result,
+	Indice_Micromissione AS IndexMission,
+	Numero_Micromissioni AS CountMission
+FROM 
+	micromissioni
+INNER JOIN
+    commesse
+    ON micromissioni.ID_Commessa = commesse.ID_Commessa
+INNER JOIN
+    livellomacchine
+    ON livellomacchine.ID_Commessa = commesse.ID_Commessa
+WHERE 
+	commesse.Nome = 'Asko Norge'
+	AND Data_Ora_Tx > '2025-10-27 9:00:00' 
+	AND Data_Ora_Tx < '2025-10-27 9:52:00' 
+	AND micromissioni.Macchina = 'Shuttle1'
+	AND livellomacchine.Macchina = 'Shuttle1';
+	-- AND livello = 1;
+
+SELECT 
+	Macchina,
+	Tipo,
+	Risultato,
+	Data_Ora_Rx
+FROM
+	micromissioni
+WHERE
+	ID_Commessa = 9
+	AND Macchina = 'Satellite3'
+	AND Risultato = '(122) Error warning'
+	AND Data_Ora_Tx >= '2025-10-31 00:00:00';
+	
+SELECT
+	Macchina,
+	Tipo,
+	Risultato,
+	Data_Ora_Rx,
+	CONCAT(
+	  TIMESTAMPDIFF(MINUTE, LAG(Data_Ora_Rx) OVER (ORDER BY Data_Ora_Rx), Data_Ora_Rx),
+	  ' min'
+	) AS Diff_Minuti
+	FROM micromissioni
+WHERE
+    ID_Commessa = 9
+    AND Macchina = 'Satellite3'
+    AND Risultato = '(122) Error warning'
+    AND Data_Ora_Tx >= '2025-10-31 00:00:00';
+-- ORDER BY Data_Ora_Rx;

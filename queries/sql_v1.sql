@@ -1,24 +1,13 @@
 DROP TABLE Commesse;
 
-
 -- Creazione Tabella Commesse
 CREATE TABLE `Commesse` (
 	`ID_Commessa` INT NOT NULL,
 	`Nome` VARCHAR(200) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
 	PRIMARY KEY (`ID_Commessa`) USING BTREE
-)
-COLLATE='utf8mb4_0900_ai_ci'
-;
-
+)COLLATE='utf8mb4_0900_ai_ci';
 
 INSERT INTO Commesse(Nome) VALUES ('Bosal'), ('Orangina'), ('Tonno Callipo');
-
-SELECT * FROM Commesse;
-
-TRUNCATE Commesse;
-
-DESCRIBE Commesse;
-
 
 -- Creazione Tabella Allarmi
 CREATE TABLE `Allarmi` (
@@ -36,11 +25,6 @@ CREATE TABLE `Allarmi` (
 )
 COLLATE='utf8mb4_0900_ai_ci'
 ;
-
-
-SELECT * FROM Allarmi;
-
-TRUNCATE Allarmi;
 
 
 -- Creazione Tabella Micromissioni
@@ -75,11 +59,12 @@ CREATE TABLE `MicroMissioni` (
 	PRIMARY KEY (`ID_Micromissione`) USING BTREE,
 	INDEX `FK__Commessa` (`ID_Commessa`) USING BTREE,
 	CONSTRAINT `FK_MicroMissioni_Commessa` FOREIGN KEY (`ID_Commessa`) REFERENCES `Commesse` (`ID_Commessa`) ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-COLLATE='utf8mb4_0900_ai_ci'
-;
+)COLLATE='utf8mb4_0900_ai_ci';
 
-INSERT INTO Associazioni(`Tipo_Macchina`, `Tipo_Allarme`, `Allarme`) VALUES ('Satellite', 'Warning', '(24) OK quota teorica');
+INSERT INTO 
+	Associazioni(`Tipo_Macchina`, `Tipo_Allarme`, `Allarme`) 
+VALUES 
+	('Satellite', 'Warning', '(24) OK quota teorica');
 
 
 
@@ -135,9 +120,6 @@ WHERE
 	ID_Commessa = 2
 ORDER BY
 	Tipo ASC;
-
-1.0080015610224888e+17
-
 
 
 # Test inner join su chiave straniera
@@ -240,7 +222,7 @@ where
    
    
    
-   INSERT INTO Associazioni (Tipo_Macchina, Tipo_Allarme, Allarme) VALUES
+INSERT INTO Associazioni (Tipo_Macchina, Tipo_Allarme, Allarme) VALUES
 ('7N0', 'Alarm', '(200) AlarmHW'),
 ('7N0', 'Alarm', '(215) Automatico manuale'),
 ('7S0', 'Alarm', '(200) AlarmHW'),
@@ -262,8 +244,3 @@ WHERE ID_Commessa = 3
   AND Tipo LIKE '%Spostamento%' 
   AND DATE(Data_Ora_Inizio) = '2025-05-09'
   AND Macchina LIKE '7N0101';
-
-    
-
-
-	
